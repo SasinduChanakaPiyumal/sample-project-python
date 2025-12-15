@@ -14,7 +14,19 @@ def test_benchmark_sum_square(benchmark) -> None:
     benchmark(DoubleForLoop.sum_square, 100)
 
 
-@pytest.mark.parametrize("n, S", [(1, 0), (2, 1), (3, 4), (10, 165)])
+@pytest.mark.parametrize(
+    "n, S",
+    [
+        (0, 0),  # Edge case: empty range
+        (1, 0),  # Single element
+        (2, 1),  # Two elements
+        (3, 4),  # Three elements
+        (4, 10),  # Four elements
+        (5, 20),  # Five elements
+        (10, 165),  # Larger value
+        (20, 1330),  # Even larger value
+    ],
+)
 def test_sum_triangle(n: int, S: int) -> None:
     assert DoubleForLoop.sum_triangle(n) == S
 
