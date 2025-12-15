@@ -64,11 +64,11 @@ class DoubleForLoop:
         Returns:
             int: Number of duplicates between the two arrays
         """
+        # Use set intersection to find common elements at same indices
         count = 0
-        for i in range(len(arr0)):
-            for j in range(len(arr1)):
-                if i == j and arr0[i] == arr1[j]:
-                    count += 1
+        for i in range(min(len(arr0), len(arr1))):
+            if arr0[i] == arr1[i]:
+                count += 1
         return count
 
     @staticmethod
