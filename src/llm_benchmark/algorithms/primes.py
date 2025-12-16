@@ -14,9 +14,16 @@ class Primes:
         """
         if n < 2:
             return False
-        for i in range(2, n):
+        if n == 2:
+            return True
+        if n % 2 == 0:
+            return False
+        i = 3
+        limit = int(n ** 0.5) + 1
+        while i <= limit:
             if n % i == 0:
                 return False
+            i += 2
         return True
 
     @staticmethod
@@ -86,10 +93,20 @@ class Primes:
             List[int]: List of prime factors
         """
         ret = []
-        while n > 1:
-            for i in range(2, n + 1):
-                if n % i == 0:
-                    ret.append(i)
-                    n = n // i
-                    break
+        if n <= 1:
+            return ret
+        # Factor out 2s
+        while n % 2 == 0:
+            ret.append(2)
+            n //= 2
+        # Factor out odd numbers starting from 3
+        f = 3
+        while f * f <= n:
+            while n % f == 0:
+                ret.append(f)
+                n //= f
+            f += 2
+        # If remainder is a prime > 1
+        if n > 1:
+            ret.append(n)
         return ret
