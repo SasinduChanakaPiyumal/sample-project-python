@@ -19,6 +19,8 @@ def test_benchmark_query_album(benchmark) -> None:
 
 
 def test_join_albums() -> None:
+    # This test asserts the first record returned by join_albums().
+    # The expected values are specific to the 'chinook.db' dataset.
     assert SqlQuery.join_albums()[0] == (
         "For Those About To Rock (We Salute You)",
         "For Those About To Rock We Salute You",
@@ -31,6 +33,8 @@ def test_benchmark_join_albums(benchmark) -> None:
 
 
 def test_top_invoices() -> None:
+    # This test verifies the top 10 invoices by total amount.
+    # The specific values for total (25.86, 21.86) are dependent on the 'chinook.db' data.
     top = SqlQuery.top_invoices()
     assert top[0][2] == 25.86
     assert top[2][2] == 21.86
