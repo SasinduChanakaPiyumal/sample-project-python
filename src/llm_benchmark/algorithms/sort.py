@@ -1,3 +1,4 @@
+import heapq
 from sys import maxsize
 from typing import List
 
@@ -45,15 +46,4 @@ class Sort:
         Returns:
             List[int]: List of maximum n values
         """
-        tmp = v.copy()
-        ret = [-maxsize - 1] * n
-        for i in range(n):
-            max_val = tmp[0]
-            max_idx = 0
-            for j in range(1, len(tmp)):
-                if tmp[j] > max_val:
-                    max_val = tmp[j]
-                    max_idx = j
-            ret[i] = max_val
-            tmp.pop(max_idx)
-        return ret
+        return heapq.nlargest(n, v)
