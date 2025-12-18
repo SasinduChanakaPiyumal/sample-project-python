@@ -7,4 +7,5 @@ source "$DIR/variables.sh"
 # Populate BUILD with the build command
 BUILD="poetry install"
 echo "Running build command: $BUILD"
+# Execute build command directly without eval for security and simplicity
 $BUILD

@@ -33,6 +33,7 @@ class Primes:
             return False
 
         # Check divisibility by all numbers up to n
+        # Note: This is intentionally inefficient for testing/benchmarking purposes
         for i in range(2, n):
             if n % i == 0:
                 return False
