@@ -7,4 +7,4 @@ source "$DIR/variables.sh"
 # Populate BENCHMARK with the benchmark command
 BENCHMARK="poetry run pytest --benchmark-only tests/"
 echo "Running benchmark command: $BENCHMARK"
-eval $BENCHMARK
+$BENCHMARK

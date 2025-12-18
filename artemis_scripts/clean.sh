@@ -7,4 +7,6 @@ source "$DIR/variables.sh"
 # Populate CLEAN with the clean command
 CLEAN=""
 echo "Running clean command: $CLEAN"
-eval $CLEAN
+if [ -n "$CLEAN" ]; then
+    $CLEAN
+fi
