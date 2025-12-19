@@ -79,6 +79,12 @@ class Primes:
     def prime_factors(n: int) -> List[int]:
         """Prime factors of a number
 
+        Uses an optimized trial division algorithm:
+        - Handles factors of 2 separately for quick even number processing
+        - Only checks odd factors from 3 onwards
+        - Only iterates up to sqrt(n), since any factor larger than sqrt(n)
+          must have a corresponding factor smaller than sqrt(n)
+
         Args:
             n (int): Number to factorize
 
@@ -86,10 +92,26 @@ class Primes:
             List[int]: List of prime factors
         """
         ret = []
-        while n > 1:
-            for i in range(2, n + 1):
-                if n % i == 0:
-                    ret.append(i)
-                    n = n // i
-                    break
+        
+        # Handle edge cases
+        if n <= 1:
+            return ret
+        
+        # Extract all factors of 2
+        while n % 2 == 0:
+            ret.append(2)
+            n = n // 2
+        
+        # Check odd factors starting from 3, up to sqrt(n)
+        i = 3
+        while i * i <= n:
+            while n % i == 0:
+                ret.append(i)
+                n = n // i
+            i += 2
+        
+        # If n is still greater than 1, it's a prime factor
+        if n > 1:
+            ret.append(n)
+        
         return ret
