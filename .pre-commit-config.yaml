@@ -1,0 +1,70 @@
+# Pre-commit configuration for code quality and security checks
+# Install hooks: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Pip-audit: Scans for known security vulnerabilities in dependencies
+  - repo: https://github.com/pypa/pip-audit
+    rev: v1.8.0
+    hooks:
+      - id: pip-audit
+        name: pip-audit
+        description: Scan for known security vulnerabilities in dependencies
+        entry: pip-audit --scan poetry.lock
+        language: python
+        files: ^poetry.lock$
+        stages: [commit]
+        fail_fast: true
+
+  # Black: Uncompromising Python code formatter
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        name: black
+        description: Format Python code with black
+        language: python
+        types: [python]
+        require_serial: true
+
+  # isort: Import sorting utility
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort
+        description: Sort Python imports with isort
+        language: python
+        types: [python]
+
+  # Ruff: Fast Python linter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.13
+    hooks:
+      - id: ruff
+        name: ruff
+        description: Lint Python code with ruff
+        language: python
+        types: [python]
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        name: yamllint
+        description: Lint YAML files
+        language: python
+        types: [yaml]
+        args: [--strict]
+
+  # TOML validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-toml
+        name: check-toml
+        description: Validate TOML files
+        language: python
+        types: [toml]
+
