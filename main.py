@@ -1,3 +1,5 @@
+import logging
+import os
 from llm_benchmark.algorithms.primes import Primes
 from llm_benchmark.algorithms.sort import Sort
 from llm_benchmark.control.double import DoubleForLoop
@@ -6,6 +8,43 @@ from llm_benchmark.generator.gen_list import GenList
 from llm_benchmark.sql.query import SqlQuery
 from llm_benchmark.datastructures.dslist import DsList
 from llm_benchmark.strings.strops import StrOps
+
+# ============================================================================
+# LOGGING CONFIGURATION
+# ============================================================================
+
+# Create logs directory if it doesn't exist
+LOGS_DIR = "logs"
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Configure logging format
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(funcName)s - %(message)s"
+LOG_DATEFORMAT = "%Y-%m-%d %H:%M:%S"
+
+# Initialize root logger
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+# Remove any existing handlers to avoid duplicate logs
+logger.handlers.clear()
+
+# Configure FileHandler
+file_handler = logging.FileHandler(os.path.join(LOGS_DIR, "main.log"))
+file_handler.setLevel(logging.DEBUG)
+file_formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATEFORMAT)
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+# Configure StreamHandler (console output)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_formatter = logging.Formatter(LOG_FORMAT, datefmt=LOG_DATEFORMAT)
+console_handler.setFormatter(console_formatter)
+logger.addHandler(console_handler)
+
+# Log initialization message
+logger.info("Logging infrastructure initialized")
 
 
 def single():
