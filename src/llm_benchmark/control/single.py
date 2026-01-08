@@ -12,10 +12,8 @@ class SingleForLoop:
         Returns:
             int: Sum of range of numbers from 0 to n
         """
-        arr = []
-        for i in range(n):
-            arr.append(i)
-        return sum(arr)
+        # Use mathematical formula: sum = n * (n - 1) / 2
+        return n * (n - 1) // 2
 
     @staticmethod
     def max_list(v: List[int]) -> int:
