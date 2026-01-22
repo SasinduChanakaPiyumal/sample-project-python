@@ -45,13 +45,10 @@ class DoubleForLoop:
         Returns:
             int: Number of pairs in the array
         """
-        # Count frequency of each element in O(N) time
+        # Count frequency of each element in O(n) time
+        # A "pair" here means a value that appears exactly twice in the array.
         freq_map = Counter(arr)
-        
-        # Count elements that appear exactly twice
-        count = sum(1 for freq in freq_map.values() if freq == 2)
-        
-        return count
+        return sum(1 for freq in freq_map.values() if freq == 2)
 
     @staticmethod
     def count_duplicates(arr0: List[int], arr1: List[int]) -> int:
@@ -64,11 +61,14 @@ class DoubleForLoop:
         Returns:
             int: Number of duplicates between the two arrays
         """
+        # The previous implementation used nested loops but only incremented
+        # when indices matched (i == j). That is equivalent to comparing
+        # elements at the same positions; we can do this in a single pass.
+        # Complexity: O(min(len(arr0), len(arr1)))
         count = 0
-        for i in range(len(arr0)):
-            for j in range(len(arr1)):
-                if i == j and arr0[i] == arr1[j]:
-                    count += 1
+        for a, b in zip(arr0, arr1):
+            if a == b:
+                count += 1
         return count
 
     @staticmethod
