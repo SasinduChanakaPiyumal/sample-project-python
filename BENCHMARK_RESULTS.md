@@ -15,7 +15,7 @@
 - **Optimization Technique:** Migration from O(n²) selection sort to O(n log n) Timsort
 - **Current Implementation:** Python's built-in `sorted()` function (Timsort algorithm)
 - **Time Complexity Improvement:** O(n²) → O(n log n)
-- **Expected Performance Gain:** 10-100x faster depending on list size
+- **Expected Performance Gain:** 10-1000x faster depending on list size
 - **Status:** ✅ **OPTIMIZATION CONFIRMED - TIMSORT IMPLEMENTATION ACTIVE**
 
 ---
@@ -27,7 +27,8 @@
 **Test Location:** `tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list`
 
 ```python
-def test_benchmark_sort_list(benchmark) -> None:
+def test_benchmark_sort_list(benchmark: BenchmarkFixture) -> None:
+    """Benchmark the DsList.sort_list() method with a small reversed list."""
     benchmark(DsList.sort_list, [5, 4, 3, 2, 1])
 ```
 
@@ -69,7 +70,7 @@ def sort_list(v: List[int]) -> List[int]:
 | **Time Complexity (Average Case)** | O(n log n) |
 | **Time Complexity (Worst Case)** | O(n log n) |
 | **Space Complexity** | O(n) - requires auxiliary space for merging |
-| **Stability** | Yes - maintains relative order of equal elements |
+| **Stability** | Stable - maintains relative order of equal elements |
 | **In-Place** | No - returns a new sorted list |
 | **Adaptive** | Yes - leverages existing order in data |
 
@@ -115,8 +116,9 @@ Total comparisons: (n-1) + (n-2) + ... + 1 = n(n-1)/2 ≈ O(n²)
 ```
 
 **Example execution counts for different list sizes:**
-| List Size (n) | Comparisons | Operations |
-|---------------|-------------|-----------|
+
+| List Size (n) | Comparisons | Operations Range |
+|---------------|-------------|------------------|
 | 10 | 45 | ~45-450 |
 | 100 | 4,950 | ~4,950-49,500 |
 | 1,000 | 499,500 | ~499,500-4,995,000 |
@@ -136,38 +138,39 @@ Total operations: n × log₂(n) ≈ O(n log n)
 ```
 
 **Example execution counts for different list sizes:**
-| List Size (n) | Operations | Ratio to O(n²) |
-|---------------|-----------|---|
-| 10 | ~33 | 0.73x (1.4x faster) |
-| 100 | ~664 | 0.13x (**7.5x faster**) |
-| 1,000 | ~9,966 | 0.02x (**50x faster**) |
-| 10,000 | ~132,877 | 0.0027x (**376x faster**) |
-| 100,000 | ~1,660,964 | 0.00033x (**3,010x faster**) |
+
+| List Size (n) | Operations | Ratio to O(n²) | Speed-up |
+|---------------|------------|----------------|----------|
+| 10 | ~33 | 0.73x | 1.4x faster |
+| 100 | ~664 | 0.13x | **7.5x faster** |
+| 1,000 | ~9,966 | 0.02x | **50x faster** |
+| 10,000 | ~132,877 | 0.0027x | **376x faster** |
+| 100,000 | ~1,660,964 | 0.00033x | **3,010x faster** |
 
 ### Performance Improvement Factor
 
-**For list size = 100 elements:**
+**List size: 100 elements**
 ```
 O(n²) operations: 100 × 99 / 2 = 4,950 operations
 O(n log n) operations: 100 × log₂(100) ≈ 664 operations
 
-Improvement Factor: 4,950 / 664 ≈ 7.5x FASTER
+Improvement Factor: 4,950 / 664 ≈ 7.5x faster
 ```
 
-**For list size = 1,000 elements:**
+**List size: 1,000 elements**
 ```
 O(n²) operations: 1,000 × 999 / 2 ≈ 499,500 operations
 O(n log n) operations: 1,000 × log₂(1,000) ≈ 9,966 operations
 
-Improvement Factor: 499,500 / 9,966 ≈ 50x FASTER
+Improvement Factor: 499,500 / 9,966 ≈ 50x faster
 ```
 
-**For list size = 10,000 elements:**
+**List size: 10,000 elements**
 ```
 O(n²) operations: 10,000 × 9,999 / 2 ≈ 49,995,000 operations
 O(n log n) operations: 10,000 × log₂(10,000) ≈ 132,877 operations
 
-Improvement Factor: 49,995,000 / 132,877 ≈ 376x FASTER
+Improvement Factor: 49,995,000 / 132,877 ≈ 376x faster
 ```
 
 ---
@@ -225,9 +228,10 @@ The benchmark test verifies:
 
 ### Running the Benchmark Test
 
-**Using Poetry (Recommended):**
+**Using Poetry (recommended):**
 ```bash
-poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
+poetry run pytest --benchmark-only \
+  tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
 ```
 
 **Using the provided script:**
@@ -265,15 +269,15 @@ The `sort_list()` implementation successfully uses Python's optimized Timsort al
 - ✅ Cache-efficient implementation
 - ✅ Production-ready with decades of optimization
 
-**Performance Improvement Range:**
+**Performance Improvement by List Size:**
 - **Small lists (n=10-50):** 1-5x faster
 - **Medium lists (n=100-1,000):** 7-50x faster
 - **Large lists (n=10,000+):** 100-3,000x faster
 
-**Expected Results at Various Scales:**
-- For list size 100: ~7.5x faster than O(n²) selection sort
-- For list size 1,000: ~50x faster than O(n²) selection sort
-- For list size 10,000: ~376x faster than O(n²) selection sort
+**Specific Performance Gains:**
+- List size 100: ~7.5x faster than O(n²) selection sort
+- List size 1,000: ~50x faster than O(n²) selection sort
+- List size 10,000: ~376x faster than O(n²) selection sort
 
 ---
 
@@ -289,7 +293,7 @@ The optimized `sort_list()` implementation using Timsort is:
 4. ✅ **Well-documented** - This analysis provides complete performance metrics
 5. ✅ **Stable** - Maintains element ordering for equal elements
 
-**Impact:** Sorting large lists now executes **10-100x faster** compared to naive O(n²) approaches.
+**Impact:** Sorting large lists now executes **10-1000x faster** compared to naive O(n²) approaches.
 
 ---
 
@@ -298,31 +302,36 @@ The optimized `sort_list()` implementation using Timsort is:
 ### Algorithm Steps
 
 1. **Divide:** Split array into small runs (typically 32-64 elements)
-2. **Sort:** Use insertion sort on each run (O(n²) but optimal for small n)
-3. **Merge:** Merge sorted runs in a stack-based manner
-4. **Optimize:** Use "galloping mode" to detect and exploit sorted sequences
+2. **Sort Runs:** Use insertion sort on each run (O(n²) but optimal for small n)
+3. **Merge Runs:** Merge sorted runs using a stack-based approach
+4. **Galloping Mode:** Detect and exploit existing sorted sequences for optimization
 
 ### Why Timsort is Superior
 
-**Strengths:**
-- Adapts to real-world data patterns (partially sorted sequences)
-- Efficient cache utilization with small runs
-- Guaranteed O(n log n) worst case (unlike QuickSort)
-- Stable sort (unlike QuickSort)
-- Used in Java, Android, and major Python implementations
+**Key Advantages:**
+- **Adaptive:** Exploits real-world data patterns (partially sorted sequences)
+- **Cache-efficient:** Small runs improve cache utilization
+- **Guaranteed Performance:** O(n log n) worst case (unlike QuickSort)
+- **Stable:** Maintains relative order of equal elements (unlike QuickSort)
+- **Battle-tested:** Used in Python, Java, Android, and major platforms
 
-**Use Cases:**
+**Ideal Use Cases:**
 - General-purpose sorting (best default choice)
-- Data with existing order patterns
-- Situations requiring stable sorting
-- Memory-conscious implementations (O(n) space is acceptable)
+- Datasets with existing order patterns
+- Applications requiring stable sorting
+- Scenarios where O(n) auxiliary space is acceptable
 
 ---
 
-**Benchmark Documentation Complete**  
-**Status:** ✅ **READY FOR DEPLOYMENT**
+## Document Information
 
-**Generated:** 2024-12-19  
-**Framework Version:** pytest-benchmark 4.0.0+  
-**Python:** 3.8+  
-**Implementation:** Timsort (O(n log n))
+**Status:** ✅ **BENCHMARK DOCUMENTATION COMPLETE - READY FOR DEPLOYMENT**
+
+**Document Details:**
+- **Generated:** 2024-12-19
+- **Framework:** pytest-benchmark 4.0.0+
+- **Python Version:** 3.8+
+- **Algorithm:** Timsort (O(n log n))
+- **Implementation Status:** Production-ready
+
+---
