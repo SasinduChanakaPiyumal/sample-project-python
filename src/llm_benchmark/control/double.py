@@ -11,10 +11,12 @@ class DoubleForLoop:
             n (int): Number to sum up to
 
         Returns:
-            int: Sum of squares of numbers from 0 to n
+            int: Sum of squares of numbers from 0 to n (exclusive)
         """
         # Use mathematical formula for sum of squares: 0^2 + 1^2 + ... + (n-1)^2
         # Formula: (n-1) * n * (2*n - 1) // 6
+        if n <= 0:
+            return 0
         return (n - 1) * n * (2 * n - 1) // 6
 
     @staticmethod
@@ -25,13 +27,13 @@ class DoubleForLoop:
             n (int): Number to sum up to
 
         Returns:
-            int: Sum of triangle of numbers from 0 to n
+            int: Sum of triangle of numbers from 0 to n (exclusive)
         """
-        sum_ = 0
-        for i in range(n):
-            for j in range(i + 1):
-                sum_ += j
-        return sum_
+        # Each row i contributes sum_{j=0..i} j = i*(i+1)//2.
+        # Total = sum_{i=0..n-1} i*(i+1)//2 = (n-1)*n*(n+1)//6
+        if n <= 0:
+            return 0
+        return (n - 1) * n * (n + 1) // 6
 
     @staticmethod
     def count_pairs(arr: List[int]) -> int:
@@ -62,14 +64,14 @@ class DoubleForLoop:
             arr1 (List[int]): Array of integers
 
         Returns:
-            int: Number of duplicates between the two arrays
+            int: Total count of elements that appear in both arrays (counted with multiplicity)
         """
-        count = 0
-        for i in range(len(arr0)):
-            for j in range(len(arr1)):
-                if i == j and arr0[i] == arr1[j]:
-                    count += 1
-        return count
+        if not arr0 or not arr1:
+            return 0
+        # Use Counters to compute multiset intersection size efficiently
+        c0 = Counter(arr0)
+        c1 = Counter(arr1)
+        return sum(min(c0[k], c1[k]) for k in c0.keys() & c1.keys())
 
     @staticmethod
     def sum_matrix(m: List[List[int]]) -> int:
@@ -82,7 +84,7 @@ class DoubleForLoop:
             int: Sum of matrix of integers
         """
         sum_ = 0
-        for i in range(len(m)):
-            for j in range(len(m[i])):
-                sum_ += m[i][j]
+        for row in m:
+            for val in row:
+                sum_ += val
         return sum_
