@@ -166,3 +166,162 @@ class Tree:
         right_height = self._calculate_height(node.right)
         
         return 1 + max(left_height, right_height)
+    
+    def inorder_traversal(self) -> List[Any]:
+        """Perform an inorder traversal of the tree.
+        
+        Inorder traversal visits nodes in sorted order (left subtree, node, right subtree).
+        For a valid BST, this should return values in sorted (non-decreasing) order.
+        
+        Returns:
+            A list of values in inorder sequence
+        """
+        result: List[Any] = []
+        
+        def inorder_recursive(node: Optional[Node]) -> None:
+            """Helper function for recursive inorder traversal.
+            
+            Args:
+                node: Current node being visited
+            """
+            if node is not None:
+                inorder_recursive(node.left)
+                result.append(node.value)
+                inorder_recursive(node.right)
+        
+        inorder_recursive(self._root)
+        return result
+
+
+# Public module-level functions for BST operations
+
+def bst_insert(tree: Tree, value: Any) -> Tree:
+    """Insert a value into the Binary Search Tree.
+    
+    Adds the value to the tree while maintaining the BST property:
+    - All values in the left subtree are less than the node's value
+    - All values in the right subtree are greater than the node's value
+    
+    DUPLICATE HANDLING: Duplicates are REJECTED. If the value already exists
+    in the tree, the insertion is ignored and the tree is returned unchanged.
+    This decision was made to maintain O(log n) search performance and simplify
+    the tree structure. Alternative approaches (allowing duplicates in right
+    subtree or tracking counts) were considered but rejected for simplicity.
+    
+    Args:
+        tree: The Tree to insert into
+        value: The value to insert
+        
+    Returns:
+        The modified tree (same reference)
+        
+    Raises:
+        TypeError: If tree is not a Tree instance
+        
+    Example:
+        >>> tree = Tree()
+        >>> tree = bst_insert(tree, 5)
+        >>> tree = bst_insert(tree, 3)
+        >>> tree = bst_insert(tree, 7)
+        >>> tree.size
+        3
+        >>> tree = bst_insert(tree, 5)  # Duplicate, ignored
+        >>> tree.size
+        3
+    """
+    if not isinstance(tree, Tree):
+        raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
+    
+    tree._insert_value(value)
+    return tree
+
+
+def bst_search(tree: Tree, value: Any) -> bool:
+    """Search for a value in the Binary Search Tree using recursion.
+    
+    Performs a recursive depth-first search to locate the target value.
+    Time complexity: O(log n) average case (balanced tree), O(n) worst case (degenerate tree)
+    Space complexity: O(log n) average case (call stack), O(n) worst case
+    
+    Args:
+        tree: The Tree to search in
+        value: The value to search for
+        
+    Returns:
+        True if the value is found in the tree, False otherwise
+        
+    Raises:
+        TypeError: If tree is not a Tree instance
+        
+    Example:
+        >>> tree = Tree([5, 3, 7, 1, 9])
+        >>> bst_search(tree, 7)
+        True
+        >>> bst_search(tree, 10)
+        False
+    """
+    if not isinstance(tree, Tree):
+        raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
+    
+    def search_recursive(node: Optional[Node], target: Any) -> bool:
+        """Recursively search for a value in the tree.
+        
+        Args:
+            node: Current node being examined
+            target: The value to search for
+            
+        Returns:
+            True if target is found in the subtree, False otherwise
+        """
+        if node is None:
+            return False
+        
+        if target == node.value:
+            return True
+        elif target < node.value:
+            return search_recursive(node.left, target)
+        else:
+            return search_recursive(node.right, target)
+    
+    return search_recursive(tree.root, value)
+
+
+def bst_search_iterative(tree: Tree, value: Any) -> bool:
+    """Search for a value in the Binary Search Tree using iteration.
+    
+    Performs an iterative depth-first search to locate the target value.
+    This approach avoids the call stack overhead of recursion.
+    Time complexity: O(log n) average case (balanced tree), O(n) worst case (degenerate tree)
+    Space complexity: O(1) - constant space, no call stack
+    
+    Args:
+        tree: The Tree to search in
+        value: The value to search for
+        
+    Returns:
+        True if the value is found in the tree, False otherwise
+        
+    Raises:
+        TypeError: If tree is not a Tree instance
+        
+    Example:
+        >>> tree = Tree([5, 3, 7, 1, 9])
+        >>> bst_search_iterative(tree, 7)
+        True
+        >>> bst_search_iterative(tree, 10)
+        False
+    """
+    if not isinstance(tree, Tree):
+        raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
+    
+    current = tree.root
+    
+    while current is not None:
+        if value == current.value:
+            return True
+        elif value < current.value:
+            current = current.left
+        else:
+            current = current.right
+    
+    return False
