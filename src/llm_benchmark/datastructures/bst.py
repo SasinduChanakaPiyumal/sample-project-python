@@ -229,9 +229,16 @@ def bst_insert(tree: Tree, value: Any) -> Tree:
         >>> tree.size
         3
     """
+    # Validate input type - ensure we have a valid Tree instance before proceeding
     if not isinstance(tree, Tree):
         raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
     
+    # Delegate insertion to Tree's internal method which:
+    # - Handles empty tree case by creating root node
+    # - Uses recursion to find correct position maintaining BST property
+    # - Rejects duplicates (returns 0 if value exists, 1 if inserted)
+    # - Updates size counter only on successful insertion
+    # - Recalculates tree height after insertion
     tree._insert_value(value)
     return tree
 
@@ -260,6 +267,7 @@ def bst_search(tree: Tree, value: Any) -> bool:
         >>> bst_search(tree, 10)
         False
     """
+    # Validate input type - ensure we have a valid Tree instance
     if not isinstance(tree, Tree):
         raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
     
@@ -273,16 +281,21 @@ def bst_search(tree: Tree, value: Any) -> bool:
         Returns:
             True if target is found in the subtree, False otherwise
         """
+        # Base case: we've reached a null node without finding the target
         if node is None:
             return False
         
+        # Found exact match at current node
         if target == node.value:
             return True
+        # Target is smaller, search left subtree (exploits BST ordering)
         elif target < node.value:
             return search_recursive(node.left, target)
+        # Target is larger, search right subtree (exploits BST ordering)
         else:
             return search_recursive(node.right, target)
     
+    # Start recursive search from the root node
     return search_recursive(tree.root, value)
 
 
@@ -311,17 +324,25 @@ def bst_search_iterative(tree: Tree, value: Any) -> bool:
         >>> bst_search_iterative(tree, 10)
         False
     """
+    # Validate input type - ensure we have a valid Tree instance
     if not isinstance(tree, Tree):
         raise TypeError(f"Expected Tree instance, got {type(tree).__name__}")
     
+    # Start traversal from root node
     current = tree.root
     
+    # Iterate down the tree, moving left or right based on comparisons
+    # This avoids recursion overhead while maintaining same BST traversal logic
     while current is not None:
         if value == current.value:
+            # Found exact match - return success
             return True
         elif value < current.value:
+            # Target is smaller, move to left child (exploits BST ordering)
             current = current.left
         else:
+            # Target is larger, move to right child (exploits BST ordering)
             current = current.right
     
+    # Exited loop without finding value - it doesn't exist in tree
     return False
