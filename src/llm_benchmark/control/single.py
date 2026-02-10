@@ -27,6 +27,8 @@ class SingleForLoop:
         Returns:
             int: Maximum value in the vector
         """
+        if not v:
+            raise ValueError("Cannot find maximum of an empty list")
         max_val = v[0]
         for i in range(1, len(v)):
             if v[i] > max_val:
