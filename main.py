@@ -1,3 +1,5 @@
+import logging
+import sys
 from llm_benchmark.algorithms.primes import Primes
 from llm_benchmark.algorithms.sort import Sort
 from llm_benchmark.control.double import DoubleForLoop
@@ -122,14 +124,89 @@ def strops():
     print("Is palindrome:", is_palindrome)
 
 
+def execute_benchmark(func, func_name):
+    """
+    Execute a benchmark function with exception handling.
+    
+    Args:
+        func: The function to execute
+        func_name: Name of the function for logging purposes
+    
+    Returns:
+        bool: True if execution was successful, False otherwise
+    """
+    try:
+        logging.info(f"Starting benchmark: {func_name}")
+        func()
+        logging.info(f"Successfully completed benchmark: {func_name}")
+        return True
+    except Exception as e:
+        logging.error(f"Error in {func_name}: {type(e).__name__}: {str(e)}")
+        logging.debug(f"Exception details for {func_name}", exc_info=True)
+        print(f"\n[ERROR] Benchmark '{func_name}' failed: {type(e).__name__}: {str(e)}\n")
+        return False
+
+
 def main():
-    single()
-    double()
-    sql()
-    primes()
-    sort()
-    dslist()
-    strops()
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler('benchmark.log'),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    
+    logging.info("Starting benchmark suite")
+    
+    # List of benchmarks to execute
+    benchmarks = [
+        (single, "single"),
+        (double, "double"),
+        (sql, "sql"),
+        (primes, "primes"),
+        (sort, "sort"),
+        (dslist, "dslist"),
+        (strops, "strops")
+    ]
+    
+    # Track execution results
+    results = []
+    
+    # Execute each benchmark with exception handling
+    for func, name in benchmarks:
+        success = execute_benchmark(func, name)
+        results.append((name, success))
+    
+    # Summary of execution
+    logging.info("Benchmark suite completed")
+    total = len(results)
+    successful = sum(1 for _, success in results if success)
+    failed = total - successful
+    
+    print("\n" + "=" * 50)
+    print("BENCHMARK EXECUTION SUMMARY")
+    print("=" * 50)
+    print(f"Total benchmarks: {total}")
+    print(f"Successful: {successful}")
+    print(f"Failed: {failed}")
+    
+    if failed > 0:
+        print("\nFailed benchmarks:")
+        for name, success in results:
+            if not success:
+                print(f"  - {name}")
+    
+    print("=" * 50)
+    
+    # Exit with appropriate status code
+    if failed > 0:
+        logging.warning(f"Benchmark suite completed with {failed} failure(s)")
+        sys.exit(1)
+    else:
+        logging.info("All benchmarks completed successfully")
+        sys.exit(0)
 
 
 if __name__ == "__main__":
