@@ -1,3 +1,19 @@
+"""
+Benchmark Suite Main Module
+
+This module provides a comprehensive benchmark suite for testing various
+LLM-generated algorithms and operations including:
+- Control flow operations (single/double loops)
+- SQL queries
+- Prime number algorithms
+- Sorting algorithms
+- Data structure operations
+- String operations
+
+The suite includes robust error handling to ensure that failures in individual
+benchmarks don't crash the entire test suite.
+"""
+
 import logging
 import sys
 from llm_benchmark.algorithms.primes import Primes
@@ -10,7 +26,16 @@ from llm_benchmark.datastructures.dslist import DsList
 from llm_benchmark.strings.strops import StrOps
 
 
+# ============================================================================
+# Benchmark Functions
+# ============================================================================
+# The following functions test different aspects of the LLM benchmark suite.
+# Each function is designed to be executed independently with proper error
+# handling to ensure failures don't affect other benchmarks.
+
+
 def single():
+    """Test single for loop control flow operations."""
     print("SingleForLoop")
     print("-------------")
 
@@ -21,6 +46,7 @@ def single():
 
 
 def double():
+    """Test double for loop control flow operations."""
     print("DoubleForLoop")
     print("-------------")
 
@@ -42,6 +68,7 @@ def double():
 
 
 def sql():
+    """Test SQL query operations against the database."""
     print("SQL")
     print("---")
 
@@ -58,6 +85,7 @@ def sql():
     print()
 
 def primes():
+    """Test prime number algorithms and operations."""
     print("Primes")
     print("------")
 
@@ -67,6 +95,7 @@ def primes():
     print()
 
 def sort():
+    """Test sorting algorithms and list operations."""
     print("Sort")
     print("----")
 
@@ -86,6 +115,7 @@ def sort():
 
 
 def dslist():
+    """Test data structure list operations."""
     print("DsList")
     print("----")
 
@@ -111,6 +141,7 @@ def dslist():
     print("Merged list with [6, 7, 8]:", merged_list)
 
 def strops():
+    """Test string operations including reversal and palindrome detection."""
     print("Strops")
     print("----")
 
@@ -122,6 +153,13 @@ def strops():
 
     is_palindrome = StrOps.palindrome(test_str)
     print("Is palindrome:", is_palindrome)
+
+
+# ============================================================================
+# Error Handling and Execution Utilities
+# ============================================================================
+# These utility functions provide robust error handling for the benchmark suite,
+# ensuring that individual test failures don't crash the entire execution.
 
 
 def execute_benchmark(func, func_name):
@@ -148,6 +186,17 @@ def execute_benchmark(func, func_name):
 
 
 def main():
+    """
+    Main entry point for the benchmark suite.
+    
+    Executes all benchmark functions with proper error handling and logging.
+    If any benchmark fails, it logs the error and continues with the remaining
+    benchmarks. Provides a summary of execution results at the end.
+    
+    Exit codes:
+        0: All benchmarks completed successfully
+        1: One or more benchmarks failed
+    """
     # Configure logging
     logging.basicConfig(
         level=logging.INFO,
