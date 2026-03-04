@@ -250,6 +250,42 @@ poetry run pytest --benchmark-only tests/
 
 ---
 
+## 🔐 Vulnerability Management Documentation
+
+### 6. VULNERABILITY_BASELINE.md 🛡️ SECURITY BASELINE
+**Best for:** Security status overview, vulnerability tracking  
+**Read time:** 10 minutes
+
+**Contents:**
+- Executive summary of vulnerability status
+- Scan methodology and tools
+- Complete dependency inventory with security status
+- Severity breakdown (Critical/High/Medium/Low)
+- Package-specific vulnerability review
+- Remediation tracking table
+- Scan reproducibility instructions
+
+**👉 Start here if you want:** Current project vulnerability status
+
+---
+
+### 7. VULNERABILITY_SCANNING.md 🔍 SCANNING PROCEDURES
+**Best for:** Running scans, interpreting results, remediation workflow  
+**Read time:** 10–15 minutes
+
+**Contents:**
+- Quick start for running scans
+- pip-audit configuration explanation
+- Severity level decision matrix
+- Remediation workflow procedures
+- Baseline documentation process
+- CI/CD integration guidance
+- Troubleshooting guide
+
+**👉 Start here if you want:** How to run and interpret vulnerability scans
+
+---
+
 ## 💾 Document Format
 
 All documentation is in **Markdown** format (`.md`):
@@ -263,10 +299,17 @@ All documentation is in **Markdown** format (`.md`):
 
 ## ✨ Key Takeaways
 
+**Performance:**
 - **Performance Improvement:** 7.5× to 3,010× faster
 - **Algorithm:** O(n log n) Timsort (vs. O(n²) baseline)
 - **Implementation:** Python's built-in `sorted()` function
 - **Status:** ✅ Production Ready
+
+**Security:**
+- **Vulnerability Status:** ✅ All Clear (Baseline scan)
+- **Scanning Tool:** pip-audit with PyPA + OSV databases
+- **Monitoring:** Regular scans recommended
+- **Status:** ✅ Secure
 
 ---
 
@@ -284,7 +327,13 @@ All documentation is in **Markdown** format (`.md`):
 4. **To verify requirements:**  
    → Read PERFORMANCE_VERIFICATION.md
 
-5. **To run benchmarks:**  
+5. **To check vulnerability status:**  
+   → Read VULNERABILITY_BASELINE.md
+
+6. **To run vulnerability scans:**  
+   → Read VULNERABILITY_SCANNING.md
+
+7. **To run benchmarks:**  
    → Follow instructions in BENCHMARK_QUICKSTART.md
 
 ---

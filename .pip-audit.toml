@@ -1,0 +1,11 @@
+# pip-audit configuration for dependency vulnerability scanning
+
+[tool.pip-audit]
+# Scan both direct and transitive dependencies
+require-hashes = false
+
+# Services to check vulnerabilities against
+services = ["pypa", "osv"]
+
+# Report all severity levels
+report-format = "markdown"
