@@ -160,10 +160,20 @@ This project includes comprehensive performance benchmark documentation for the 
 
 ### Quick Command
 ```bash
+make benchmark
+```
+
+For detailed benchmark of specific test:
+```bash
 poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
 ```
 
 ### Run All Benchmarks
+```bash
+make benchmark
+```
+
+Or with Poetry directly:
 ```bash
 poetry run pytest --benchmark-only tests/
 ```

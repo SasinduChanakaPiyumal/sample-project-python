@@ -66,7 +66,7 @@ def sort_list(v: List[int]) -> List[int]:
 - Input: `[5, 4, 3, 2, 1]` (reverse-ordered list)
 - Expected Output: `[1, 2, 3, 4, 5]`
 - Framework: pytest-benchmark 4.0.0+
-- Method: `poetry run pytest --benchmark-only tests/`
+- Method: `make benchmark`
 
 **Functional Verification:**
 - ✅ Correctness test passes
@@ -160,6 +160,15 @@ While Timsort is optimal for general-purpose sorting, consider:
 ## Testing & Validation
 
 ### How to Run Benchmarks
+
+Use the Makefile for simplified commands:
+
+```bash
+# Run all benchmarks
+make benchmark
+```
+
+Or run specific tests with Poetry:
 
 ```bash
 # Run just the sort_list benchmark

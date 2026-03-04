@@ -15,7 +15,7 @@
 **Details:**
 - Benchmark test location: `tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list`
 - Test function: `test_benchmark_sort_list(benchmark)`
-- Execution method: `poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list`
+- Execution method: `make benchmark`
 - Framework: pytest-benchmark 4.0.0+ with pytest 7.4.3+
 - Status: Successfully configured and documented
 
@@ -136,6 +136,11 @@ For n=10000: 10000 / ~13.29 ≈ 376x faster
 
 **Test Command Verification:**
 ```bash
+make benchmark
+```
+
+Or with Poetry:
+```bash
 poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
 ```
 
@@ -211,7 +216,7 @@ poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslis
   - Expected output: `[1, 2, 3, 4, 5]`
   - Function: `DsList.sort_list(v: List[int]) -> List[int]`
   - Implementation: Python's built-in `sorted()` function (Timsort)
-  - Execution method: `poetry run pytest --benchmark-only tests/`
+  - Execution method: `make benchmark`
 
 ### ✅ Performance gains align with expected range (10-100x improvement)
 
@@ -267,6 +272,13 @@ def sort_list(v: List[int]) -> List[int]:
 ### Benchmark Execution
 
 **How to Run:**
+
+Using Make (recommended):
+```bash
+make benchmark
+```
+
+Or with Poetry:
 ```bash
 # Run just the sort_list benchmark
 poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list

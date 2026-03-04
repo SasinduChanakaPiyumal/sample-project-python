@@ -1,0 +1,42 @@
+# Pre-commit hooks configuration
+# Run `make setup-hooks` or `poetry run pre-commit install` to activate hooks
+
+repos:
+  # Black - Python code formatter
+  - repo: https://github.com/psf/black
+    rev: 23.12.0
+    hooks:
+      - id: black
+        language_version: python3.8
+        args: [--line-length=88]
+
+  # isort - Import sorter (configured to be compatible with black)
+  - repo: https://github.com/PyCPA/isort
+    rev: 5.13.1
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=88]
+
+  # Trailing whitespace fixer
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+# Configuration for all hooks
+default_language_version:
+  python: python3.8
+
+# Exclude common directories to improve performance
+exclude: |
+  (?x)^(
+    \.venv|
+    venv|
+    env|
+    __pycache__|
+    \.pytest_cache|
+    \.git|
+    poetry\.lock
+  )/

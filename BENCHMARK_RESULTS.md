@@ -88,7 +88,7 @@ def sort_list(v: List[int]) -> List[int]:
 ### Benchmark Configuration
 
 **Framework:** pytest-benchmark 4.0.0+  
-**Execution Method:** `poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list`
+**Execution Method:** `make benchmark`
 
 ### Test Execution Status
 
@@ -228,16 +228,23 @@ The benchmark test verifies:
 
 ### Running the Benchmark Test
 
-**Using Poetry (recommended):**
+**Using Make (recommended):**
+```bash
+make benchmark
+```
+
+**Using Poetry directly:**
 ```bash
 poetry run pytest --benchmark-only \
   tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
 ```
 
-**Using the provided script:**
+**Using the provided script (DEPRECATED):**
 ```bash
 bash artemis_scripts/benchmark.sh
 ```
+
+⚠️ **Note:** The `artemis_scripts/` folder is deprecated. See [artemis_scripts/DEPRECATED.md](../artemis_scripts/DEPRECATED.md) for migration information.
 
 **Run all datastructures benchmarks:**
 ```bash

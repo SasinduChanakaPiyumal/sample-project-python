@@ -40,10 +40,20 @@ The `sort_list()` function has been optimized from **O(n²) to O(n log n)**, ach
 
 ### Run the specific benchmark:
 ```bash
+make benchmark
+```
+
+Or with Poetry directly:
+```bash
 poetry run pytest --benchmark-only tests/llm_benchmark/datastructures/test_dslist.py::test_benchmark_sort_list
 ```
 
 ### Run all benchmarks:
+```bash
+make benchmark
+```
+
+Or with Poetry directly:
 ```bash
 poetry run pytest --benchmark-only tests/
 ```
@@ -154,7 +164,7 @@ return sorted(v)  # Uses Python's C-optimized Timsort
 | Quick overview? | **PERFORMANCE_SUMMARY.md** |
 | Detailed analysis? | **BENCHMARK_RESULTS.md** |
 | Requirement verification? | **PERFORMANCE_VERIFICATION.md** |
-| Run benchmarks? | `poetry run pytest --benchmark-only tests/` |
+| Run benchmarks? | `make benchmark` |
 
 ---
 
@@ -169,7 +179,7 @@ return sorted(v)  # Uses Python's C-optimized Timsort
 - **Python Version:** 3.8+
 - **Test Input:** `[5, 4, 3, 2, 1]` (reverse-ordered, worst case)
 - **Expected Output:** `[1, 2, 3, 4, 5]` (sorted ascending)
-- **Run Command:** `poetry run pytest --benchmark-only tests/`
+- **Run Command:** `make benchmark`
 
 ---
 
