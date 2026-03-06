@@ -56,3 +56,28 @@ def test_prime_factors(n: int, factors: List[int]) -> None:
 
 def test_benchmark_prime_factors(benchmark) -> None:
     benchmark(Primes.prime_factors, 84)
+
+
+@pytest.mark.parametrize(
+    "n, is_prime",
+    [
+        (0, False),
+        (1, False),
+        (2, True),
+        (3, True),
+        (4, False),
+        (10, False),
+        (17, True),
+        (26, False),
+        (97, True),
+        (100, False),
+    ],
+)
+def test_is_prime_ineff(n: int, is_prime: bool) -> None:
+    """Test the optimized is_prime_ineff function for correctness."""
+    assert Primes.is_prime_ineff(n) == is_prime
+
+
+def test_benchmark_is_prime_ineff(benchmark) -> None:
+    """Benchmark the optimized is_prime_ineff function."""
+    benchmark(Primes.is_prime_ineff, 97)
