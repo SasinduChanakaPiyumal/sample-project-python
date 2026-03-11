@@ -1,5 +1,8 @@
+import logging
 import sqlite3
 from textwrap import dedent
+
+logger = logging.getLogger(__name__)
 
 
 class SqlQuery:
@@ -13,14 +16,18 @@ class SqlQuery:
         Returns:
             bool: True if the album exists, False otherwise
         """
-        with sqlite3.connect("data/chinook.db") as conn:
-            cur = conn.cursor()
+        try:
+            with sqlite3.connect("data/chinook.db") as conn:
+                cur = conn.cursor()
 
-            cur.execute(
-                "SELECT 1 FROM Album WHERE Title = ? LIMIT 1",
-                (name,),
-            )
-            return cur.fetchone() is not None
+                cur.execute(
+                    "SELECT 1 FROM Album WHERE Title = ? LIMIT 1",
+                    (name,),
+                )
+                return cur.fetchone() is not None
+        except (sqlite3.DatabaseError, FileNotFoundError) as e:
+            logger.error(f"Error querying album: {e}")
+            return False
 
     @staticmethod
     def join_albums() -> list:
@@ -29,24 +36,28 @@ class SqlQuery:
         Returns:
             list:
         """
-        with sqlite3.connect("data/chinook.db") as conn:
-            cur = conn.cursor()
+        try:
+            with sqlite3.connect("data/chinook.db") as conn:
+                cur = conn.cursor()
 
-            cur.execute(
-                dedent(
-                    """\
-                    SELECT 
-                        t.Name AS TrackName,
-                        a.Title AS AlbumName,
-                        ar.Name AS ArtistName
-                    FROM 
-                        Track t
-                    JOIN Album a ON a.AlbumId = t.AlbumId
-                    JOIN Artist ar ON ar.ArtistId = a.ArtistId
-                    """
+                cur.execute(
+                    dedent(
+                        """\
+                        SELECT 
+                            t.Name AS TrackName,
+                            a.Title AS AlbumName,
+                            ar.Name AS ArtistName
+                        FROM 
+                            Track t
+                        JOIN Album a ON a.AlbumId = t.AlbumId
+                        JOIN Artist ar ON ar.ArtistId = a.ArtistId
+                        """
+                    )
                 )
-            )
-            return cur.fetchall()
+                return cur.fetchall()
+        except (sqlite3.DatabaseError, FileNotFoundError) as e:
+            logger.error(f"Error joining albums: {e}")
+            return []
 
     @staticmethod
     def top_invoices() -> list:
@@ -55,22 +66,26 @@ class SqlQuery:
         Returns:
             list: List of tuples
         """
-        with sqlite3.connect("data/chinook.db") as conn:
-            cur = conn.cursor()
+        try:
+            with sqlite3.connect("data/chinook.db") as conn:
+                cur = conn.cursor()
 
-            cur.execute(
-                dedent(
-                    """\
-                    SELECT 
-                        i.InvoiceId, 
-                        c.FirstName || ' ' || c.LastName AS CustomerName, 
-                        i.Total
-                    FROM 
-                        Invoice i
-                    JOIN Customer c ON c.CustomerId = i.CustomerId
-                    ORDER BY i.Total DESC
-                    LIMIT 10
-                    """
+                cur.execute(
+                    dedent(
+                        """\
+                        SELECT 
+                            i.InvoiceId, 
+                            c.FirstName || ' ' || c.LastName AS CustomerName, 
+                            i.Total
+                        FROM 
+                            Invoice i
+                        JOIN Customer c ON c.CustomerId = i.CustomerId
+                        ORDER BY i.Total DESC
+                        LIMIT 10
+                        """
+                    )
                 )
-            )
-            return cur.fetchall()
+                return cur.fetchall()
+        except (sqlite3.DatabaseError, FileNotFoundError) as e:
+            logger.error(f"Error getting top invoices: {e}")
+            return []
