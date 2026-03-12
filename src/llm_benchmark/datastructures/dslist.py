@@ -73,6 +73,12 @@ class DsList:
         Returns:
             List[int]: Rotated list of integers
         """
+        if not v:
+            return []
+        
+        # Normalize n to be within the bounds of the list
+        n = n % len(v)
+        
         ret = []
         for i in range(n, len(v)):
             ret.append(v[i])
