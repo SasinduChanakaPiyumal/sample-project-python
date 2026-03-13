@@ -14,17 +14,18 @@ class GenList:
         Returns:
             List[int]: List of random integers
         """
-        return [randint(0, m) for _ in range(n)]
+        return [randint(0, m - 1) for _ in range(n)]
 
     @staticmethod
-    def random_matrix(n: int, m: int) -> List[List[int]]:
+    def random_matrix(rows: int, cols: int, max_value: int) -> List[List[int]]:
         """Generate a matrix of random integers
 
         Args:
-            n (int): Number of rows
-            m (int): Number of columns
+            rows (int): Number of rows
+            cols (int): Number of columns
+            max_value (int): Maximum value of integers (exclusive)
 
         Returns:
             List[List[int]]: Matrix of random integers
         """
-        return [GenList.random_list(n, m) for _ in range(n)]
+        return [GenList.random_list(cols, max_value) for _ in range(rows)]

@@ -1,4 +1,4 @@
-from typing import Optional, List, Any
+from typing import Any, List, Optional
 
 
 class Node:
@@ -16,7 +16,7 @@ class Node:
         Args:
             value: The value to store in this node
         """
-        self.value = value
+        self.value: Any = value
         self.left: Optional["Node"] = None
         self.right: Optional["Node"] = None
 
@@ -24,8 +24,14 @@ class Node:
 class Tree:
     """A Binary Search Tree implementation.
     
-    Maintains BST invariant: for each node, all values in left subtree < node value < all values in right subtree.
+    Maintains BST invariant: for each node, all values in left subtree < node value 
+    < all values in right subtree.
     Tracks size (number of nodes) and height of the tree.
+    
+    Attributes:
+        _root: The root node of the tree
+        _size: The number of nodes in the tree
+        _height: The height of the tree (-1 for empty, 0 for single node)
     """
 
     def __init__(self, values: Optional[List[Any]] = None) -> None:
@@ -37,14 +43,17 @@ class Tree:
         """
         self._root: Optional[Node] = None
         self._size: int = 0
-        self._height: int = -1  # height of empty tree is -1
+        self._height: int = -1  # Height of empty tree is -1
         
-        if values is not None:
+        if values:
             for value in values:
                 self._insert_value(value)
     
     def _insert_value(self, value: Any) -> None:
         """Insert a value into the BST.
+        
+        Inserts the value while maintaining BST invariant. Updates size and height.
+        Duplicate values are not inserted.
         
         Args:
             value: The value to insert
@@ -53,35 +62,37 @@ class Tree:
             self._root = Node(value)
             self._size = 1
             self._height = 0
-        else:
-            self._size += self._insert_recursive(self._root, value)
+            return
+        
+        nodes_added = self._insert_recursive(self._root, value)
+        if nodes_added:
+            self._size += nodes_added
             self._height = self._calculate_height(self._root)
     
     def _insert_recursive(self, node: Node, value: Any) -> int:
-        """Recursively insert a value into the tree.
+        """Recursively insert a value into the subtree rooted at node.
         
         Args:
             node: Current node in the tree
             value: Value to insert
             
         Returns:
-            1 if a new node was inserted, 0 if value already exists
+            1 if a new node was inserted, 0 if value already exists (duplicate)
         """
         if value < node.value:
             if node.left is None:
                 node.left = Node(value)
                 return 1
-            else:
-                return self._insert_recursive(node.left, value)
-        elif value > node.value:
+            return self._insert_recursive(node.left, value)
+        
+        if value > node.value:
             if node.right is None:
                 node.right = Node(value)
                 return 1
-            else:
-                return self._insert_recursive(node.right, value)
-        else:
-            # Duplicate value - don't insert
-            return 0
+            return self._insert_recursive(node.right, value)
+        
+        # Duplicate value - don't insert
+        return 0
     
     @property
     def root(self) -> Optional[Node]:
@@ -120,31 +131,38 @@ class Tree:
         Returns:
             True if the tree is a valid BST, False otherwise
         """
-        def is_valid_bst_recursive(node: Optional[Node], min_value: Any = None, max_value: Any = None) -> bool:
-            """Helper function to validate BST properties recursively.
-            
-            Args:
-                node: Current node being validated
-                min_value: Minimum value this node's value must exceed (or None)
-                max_value: Maximum value this node's value must not exceed (or None)
-                
-            Returns:
-                True if this subtree is a valid BST, False otherwise
-            """
-            if node is None:
-                return True
-            
-            # Check if current node violates constraints
-            if min_value is not None and node.value <= min_value:
-                return False
-            if max_value is not None and node.value >= max_value:
-                return False
-            
-            # Recursively validate left and right subtrees
-            return (is_valid_bst_recursive(node.left, min_value, node.value) and
-                    is_valid_bst_recursive(node.right, node.value, max_value))
+        return self._is_valid_bst_recursive(self._root, None, None)
+    
+    def _is_valid_bst_recursive(
+        self, 
+        node: Optional[Node], 
+        min_value: Optional[Any], 
+        max_value: Optional[Any]
+    ) -> bool:
+        """Helper function to validate BST properties recursively.
         
-        return is_valid_bst_recursive(self._root)
+        Args:
+            node: Current node being validated
+            min_value: Minimum value this node's value must exceed (or None)
+            max_value: Maximum value this node's value must not exceed (or None)
+            
+        Returns:
+            True if this subtree is a valid BST, False otherwise
+        """
+        if node is None:
+            return True
+        
+        # Check if current node violates min/max constraints
+        if min_value is not None and node.value <= min_value:
+            return False
+        if max_value is not None and node.value >= max_value:
+            return False
+        
+        # Recursively validate left and right subtrees with updated constraints
+        left_valid = self._is_valid_bst_recursive(node.left, min_value, node.value)
+        right_valid = self._is_valid_bst_recursive(node.right, node.value, max_value)
+        
+        return left_valid and right_valid
     
     def _calculate_height(self, node: Optional[Node]) -> int:
         """Calculate the height of a subtree rooted at the given node.
