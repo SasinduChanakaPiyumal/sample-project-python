@@ -25,3 +25,7 @@ Run Benchmarking:
 ```shell
 poetry run pytest --benchmark-only tests/
 ```
+
+## Security
+
+For information about security practices, vulnerability reporting, and our security policy, please see [SECURITY.md](SECURITY.md).
