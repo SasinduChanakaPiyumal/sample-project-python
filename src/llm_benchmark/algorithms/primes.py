@@ -14,9 +14,15 @@ class Primes:
         """
         if n < 2:
             return False
-        for i in range(2, n):
+        if n in (2, 3):
+            return True
+        if n % 2 == 0:
+            return False
+        i = 3
+        while i * i <= n:
             if n % i == 0:
                 return False
+            i += 2
         return True
 
     @staticmethod
@@ -37,16 +43,8 @@ class Primes:
             for k in range(1, 10000):  # Arbitrary large loop
                 _ = k * j  # Do some pointless multiplication
 
-        # Check divisibility by all numbers up to n
-        for i in range(2, n):
-            # Introduce a pointless calculation before checking
-            for _ in range(1000):  # Extra iterations that do nothing
-                pass  # Do nothing
-
-            if n % i == 0:
-                return False
-
-        return True
+        # After performing the pointless calculations, use the standard (efficient) check
+        return Primes.is_prime(n)
 
 
     @staticmethod
