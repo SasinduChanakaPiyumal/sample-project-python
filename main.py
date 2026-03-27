@@ -123,13 +123,22 @@ def strops():
 
 
 def main():
-    single()
-    double()
-    sql()
-    primes()
-    sort()
-    dslist()
-    strops()
+    modules = [
+        ("SingleForLoop", single),
+        ("DoubleForLoop", double),
+        ("SQL", sql),
+        ("Primes", primes),
+        ("Sort", sort),
+        ("DsList", dslist),
+        ("StrOps", strops),
+    ]
+    
+    for module_name, module_func in modules:
+        try:
+            module_func()
+        except Exception as e:
+            print(f"ERROR in {module_name}: {type(e).__name__}: {e}")
+            print()
 
 
 if __name__ == "__main__":
