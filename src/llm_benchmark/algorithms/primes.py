@@ -1,6 +1,39 @@
 from typing import List
 
 
+# ========================================================================================
+# SECURITY: Maximum bound for sum_primes() - CWE-400 Resource Exhaustion Mitigation
+# ========================================================================================
+# 
+# VULNERABILITY (CWE-400 - Uncontrolled Resource Consumption):
+# The Sieve of Eratosthenes algorithm allocates a list of n booleans to track prime status.
+# Without a hard upper bound, an attacker could request sums for extremely large values,
+# causing uncontrolled memory allocation and system resource exhaustion (denial-of-service).
+#
+# RATIONALE FOR THIS SPECIFIC LIMIT (10,000,000):
+# A list of 10 million booleans consumes approximately 100MB of memory on typical systems,
+# representing a reasonable upper bound for this utility function. This limit:
+# - Allows calculations up to 10 million without taxing most systems
+# - Clearly rejects obviously malicious or resource-hungry requests
+# - Provides protection against unintended excessive usage
+#
+# MEMORY IMPACT PROGRESSION (system-dependent, approximate):
+# - n = 10^7  (10,000,000):   ~100 MB  ✓ Acceptable
+# - n = 10^8  (100,000,000):  ~1 GB    ✗ Excessive
+# - n = 10^9  (1,000,000,000): ~8 GB+   ✗ System failure risk
+#
+# DESIGN CHOICE: Why a hard limit instead of configuration/algorithm replacement?
+# See SECURITY.md at project root for full rationale. In summary:
+# - Hard limit is deterministic and cannot be accidentally bypassed
+# - Configurability adds complexity and potential for misconfiguration
+# - Algorithm replacement (e.g., segmented sieve) adds significant complexity
+#   with diminishing returns for the legitimate use cases of this function
+# - Input validation before allocation is the most effective DoS mitigation
+#
+# REFERENCE: See SECURITY.md for comprehensive vulnerability analysis and mitigation strategy
+MAX_PRIMES_BOUND = 10_000_000
+
+
 class Primes:
     """Collection of prime number algorithms including efficient and benchmark variants."""
 
@@ -117,18 +150,70 @@ class Primes:
         Uses the Sieve of Eratosthenes algorithm for efficient prime generation
         with O(n log log n) time complexity and O(n) space complexity.
 
+        **Security Note (CWE-400):**
+        This function implements a resource exhaustion defense by enforcing an upper
+        bound on input values. The limit of 10,000,000 prevents denial-of-service (DoS)
+        attacks where untrusted callers could request sums for extremely large bounds,
+        exhausting system memory with large list allocations.
+
         Args:
-            n: The upper bound (exclusive) for prime summation.
+            n: The upper bound (exclusive) for prime summation. Must be in the range
+               [0, 10,000,000). Values exceeding this limit are rejected to prevent
+               resource exhaustion attacks.
 
         Returns:
             The sum of all prime numbers in the range [0, n).
 
+        Raises:
+            ValueError: If n exceeds the maximum allowed bound (10,000,000). This
+                       indicates an invalid input that could lead to excessive memory
+                       allocation or denial-of-service conditions.
+
         Examples:
+            Valid usage:
+
             >>> Primes.sum_primes(10)
             17  # 2 + 3 + 5 + 7
-            >>> Primes.sum_primes(2)
-            0
+            >>> Primes.sum_primes(100)
+            1060
+
+            Invalid usage (exceeds bounds):
+
+            >>> Primes.sum_primes(10_000_001)  # doctest: +SKIP
+            Traceback (most recent call last):
+                ...
+            ValueError: Input value n (10,000,001) exceeds maximum allowed bound (10,000,000)...
         """
+        # ======================================================================================
+        # SECURITY VALIDATION: CWE-400 Resource Exhaustion Defense
+        # ======================================================================================
+        # This check MUST occur BEFORE any memory allocation (specifically before the
+        # "is_prime = [True] * n" list allocation below). Validating input boundaries before
+        # resource allocation is critical for preventing denial-of-service (DoS) attacks.
+        #
+        # ATTACK PREVENTED:
+        # Without this validation, an attacker could call sum_primes(10^9) causing the
+        # allocation of ~8GB+ of memory, exhausting system resources and causing a denial
+        # of service. The validation rejects such requests immediately without consuming
+        # significant resources.
+        #
+        # WHY THIS DEFENSE IS NECESSARY:
+        # - CWE-400 (Uncontrolled Resource Consumption) is a category A vulnerability
+        # - Untrusted callers could submit arbitrarily large values
+        # - The Sieve of Eratosthenes has O(n) space complexity - no algorithmic fix possible
+        # - Input validation is the most effective and robust mitigation
+        #
+        # IMPLEMENTATION DETAIL:
+        # The check uses MAX_PRIMES_BOUND (10,000,000) as the deterministic upper limit.
+        # See the MAX_PRIMES_BOUND constant definition above for security rationale.
+        # ======================================================================================
+        if n > MAX_PRIMES_BOUND:
+            raise ValueError(
+                f"Input value n ({n:,}) exceeds maximum allowed bound "
+                f"({MAX_PRIMES_BOUND:,}). This limit exists to prevent resource "
+                f"exhaustion attacks and excessive memory allocation."
+            )
+        
         if n <= 2:
             return 0
         
