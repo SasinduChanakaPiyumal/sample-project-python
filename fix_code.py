@@ -53,8 +53,11 @@ class SingleForLoop:
         Raises:
             ZeroDivisionError: If m == 0
         \"\"\"
-        # FIX: The tests expect sum of multiples (0, m, 2m...), not sum of remainders
-        return sum(i for i in range(n) if i % m == 0)
+        if n <= 0:
+            return 0
+        # m != 0 is required for proper division; allow ZeroDivisionError to propagate if m == 0
+        k = (n - 1) // m
+        return m * k * (k + 1) // 2
 """
 
 # Content for src/llm_benchmark/control/double.py

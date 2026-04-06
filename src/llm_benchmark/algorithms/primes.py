@@ -88,11 +88,11 @@ class Primes:
 
         # INEFFICIENCY #2: Linear divisibility check O(n) instead of O(sqrt(n))
         # Checks ALL divisors from 2 to n-1 instead of stopping at sqrt(n).
-        # 
+        #
         # Comparison to is_prime():
         # - Optimized: "i * i <= n" stops at sqrt(n) → O(sqrt(n))
         # - Inefficient: "range(2, n)" checks all → O(n)
-        # 
+        #
         # For n=100: optimized checks ~10 divisors, this checks 98 divisors.
         # AVOIDED: Using "i * i <= n" termination condition.
         for i in range(2, n):
