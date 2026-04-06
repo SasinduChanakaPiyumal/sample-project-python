@@ -45,9 +45,12 @@ class Sort:
         Returns:
             List[int]: List of maximum n values
         """
+        if not v:
+            return []
         tmp = v.copy()
-        ret = [-maxsize - 1] * n
-        for i in range(n):
+        actual_n = min(n, len(tmp))
+        ret = [-maxsize - 1] * actual_n
+        for i in range(actual_n):
             max_val = tmp[0]
             max_idx = 0
             for j in range(1, len(tmp)):
